@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { createBlogService } from 'src/service/createBlog-service';
 
 @Component({
@@ -14,7 +14,7 @@ export class AppComponent {
   subCategorySet:any = ['--select subCategory--','GRE/GMAT','Application','I20','Flight Information','Packing List', 'First 2 weeks', 'Bank Account', 'LinkedIn']
   constructor( private formBuilder: FormBuilder , private service: createBlogService)
   {}
-  blogDetails = this.formBuilder.group({
+  blogDetailsForm = this.formBuilder.group({
 
     blogTopic: new FormControl('', [Validators.required, Validators.minLength(3)]),
     category: new FormControl('', [Validators.required]),
@@ -38,9 +38,24 @@ export class AppComponent {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  onSubmit(blogRequest){
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.blogDetailsForm.get('blogImage').setValue(file);
+    }
+  }
+
+  onSubmit(blogRequest : NgForm){
     console.log(blogRequest)
-    
-    this.service.createPostService(blogRequest)
+    const formData = new FormData();
+    formData.append("blogTopic",this.blogDetailsForm.controls.blogTopic.value);
+    formData.append("category",this.blogDetailsForm.controls.category.value);
+    formData.append("subcategory",this.blogDetailsForm.controls.subcategory.value);
+    formData.append("body",this.blogDetailsForm.controls.body.value);
+    formData.append("videoURL",this.blogDetailsForm.controls.videoURL.value);
+    formData.append('blogImage', this.blogDetailsForm.get('blogImage').value);
+
+
+    this.service.createPostService(formData)
   }
 }

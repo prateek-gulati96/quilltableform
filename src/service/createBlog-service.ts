@@ -11,12 +11,16 @@ export class createBlogService{
     constructor(private http:HttpClient){
     }
 
-    createPostService(bgPost : blogSchema){
+    createPostService(bgPost){
         console.log("this is the requestbody from service",bgPost)
         let uri = 'http://localhost:3000/app'
-        this.http.post(uri,bgPost).toPromise().then(data=> {
-            console.log(data)
-        });
+        this.http.post(uri,bgPost).subscribe(
+            (res) => console.log(res),
+            (err) => console.log(err)
+          );
+        // .toPromise().then(data=> {
+        //     console.log(data)
+        // });
           
     }
 }
