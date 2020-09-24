@@ -12,6 +12,8 @@ export class AppComponent {
   thumb:any; 
   categorySet:any = ['--select category--','Application','Visa','Pre Arrival','Post Arrival','Job Search']
   subCategorySet:any = ['--select subCategory--','GRE/GMAT','Application','I20','Flight Information','Packing List', 'First 2 weeks', 'Bank Account', 'LinkedIn']
+  imageURL: string;
+  verify: boolean = false;
   constructor( private formBuilder: FormBuilder , private service: createBlogService)
   {}
   blogDetailsForm = this.formBuilder.group({
@@ -27,6 +29,7 @@ export class AppComponent {
 });
 
   set2(uri) {
+    this.verify = true
     var thumb = this.getParameterByName(uri.value, 'v'),
         url = 'http://img.youtube.com/vi/' + thumb + '/default.jpg';
       this.thumb = url
@@ -43,6 +46,22 @@ export class AppComponent {
       const file = event.target.files[0];
       this.blogDetailsForm.get('blogImage').setValue(file);
     }
+    this.showPreview(event)
+  }
+
+  showPreview(event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.blogDetailsForm.patchValue({
+      blogImage: file
+    });
+    this.blogDetailsForm.get('blogImage').updateValueAndValidity()
+
+    // File Preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageURL = reader.result as string;
+    }
+    reader.readAsDataURL(file)
   }
 
   onSubmit(blogRequest : NgForm){
@@ -55,7 +74,11 @@ export class AppComponent {
     formData.append("videoURL",this.blogDetailsForm.controls.videoURL.value);
     formData.append('blogImage', this.blogDetailsForm.get('blogImage').value);
 
-
-    this.service.createPostService(formData)
+    try {
+      this.service.createPostService(formData)
+    } catch (error) {
+      alert("Some error occured") 
+    }
+    this.blogDetailsForm.reset()
   }
 }

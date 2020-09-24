@@ -15,7 +15,9 @@ export class createBlogService{
         console.log("this is the requestbody from service",bgPost)
         let uri = 'http://localhost:3000/app'
         this.http.post(uri,bgPost).subscribe(
-            (res) => console.log(res),
+            (res) => {
+                console.log(res)
+            },
             (err) => console.log(err)
           );
         // .toPromise().then(data=> {
