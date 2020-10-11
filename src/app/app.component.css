@@ -1,11 +1,11 @@
 div.preview-images > img {
     width: 30%;
   }
- 
+  
   
   .sidenav {
     height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 200px; /* Set the width of the sidebar */
+    width: 15%; /* Set the width of the sidebar */
     flex: 1;
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
@@ -17,7 +17,7 @@ div.preview-images > img {
   }
 
   .main {
-    margin-left: 100px; /* Same as the width of the sidebar */
+    margin-left: 8%; /* Same as the width of the sidebar */
     flex: 4;
   }
 
@@ -30,3 +30,8 @@ div.preview-images > img {
   .card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   }
+  .ythumb {
+    
+    width: fit-content;
+    height: fit-content;
+    }

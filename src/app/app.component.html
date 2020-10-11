@@ -31,16 +31,19 @@
           <br>
           <div class="container" style="width: 70%; float: left;">
             <div class="card" style="float: left;">
-              <input accept="image/*" type="file" name="blogImage" id="blogImage" formControlName='blogImage' class=" border" (change)="onFileSelect($event)"/>
-              <div class="imagePreview" *ngIf="imageURL && imageURL !== ''">
-                <img [src]="imageURL" [alt]="blogDetailsForm.value.name">
-              </div>
+              <input accept="image/*" #blogImage type="file" name="blogImage" id="blogImage" formControlName='blogImage' class=" border" (change)="preview(blogImage.files)" />
+              <img [src]="imgURL" height="200" *ngIf="imgURL">
             </div>
             <div class="card" style="float: right;">
-              <input type="text" id='videoURL' formControlName='videoURL' placeholder="Enter video URL" #uri>
-              <button (click)="set2(uri)">Verify</button>
-              <div class="ythumb" *ngIf="verify"><img src="{{thumb}}" style="height: fit-content;width: fit-content;"/></div>
+              <div class="card">
+                <div class="ythumb" *ngIf="verify"><img src="{{thumb}}" /></div>
+                <div>
+                  <input type="text" id='videoURL' formControlName='videoURL' placeholder="Enter video URL" #uri>
+                </div>
+                <span *ngIf="!verify"><button class="btn form-control" (click)="set2(uri)">Verify</button></span>
+              </div>
             </div>
+            
           </div>
         
         </form>

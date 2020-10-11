@@ -9,11 +9,14 @@ import { createBlogService } from 'src/service/createBlog-service';
 })
 export class AppComponent {
   title = 'createpost';
+  message;
   thumb:any; 
   categorySet:any = ['--select category--','Application','Visa','Pre Arrival','Post Arrival','Job Search']
   subCategorySet:any = ['--select subCategory--','GRE/GMAT','Application','I20','Flight Information','Packing List', 'First 2 weeks', 'Bank Account', 'LinkedIn']
-  imageURL: string;
+  
   verify: boolean = false;
+  imgURL: string | ArrayBuffer;
+  imagePath: any;
   constructor( private formBuilder: FormBuilder , private service: createBlogService)
   {}
   blogDetailsForm = this.formBuilder.group({
@@ -40,29 +43,25 @@ export class AppComponent {
       results = regex.exec(url);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
-
-  onFileSelect(event) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.blogDetailsForm.get('blogImage').setValue(file);
+  
+  preview(files) {
+    if (files.length === 0)
+      return;
+ 
+    var mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.message = "Only images are supported.";
+      return;
     }
-    this.showPreview(event)
+ 
+    var reader = new FileReader();
+    this.imagePath = files;
+    reader.readAsDataURL(files[0]); 
+    reader.onload = (_event) => { 
+      this.imgURL = reader.result; 
+    }
   }
 
-  showPreview(event) {
-    const file = (event.target as HTMLInputElement).files[0];
-    this.blogDetailsForm.patchValue({
-      blogImage: file
-    });
-    this.blogDetailsForm.get('blogImage').updateValueAndValidity()
-
-    // File Preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imageURL = reader.result as string;
-    }
-    reader.readAsDataURL(file)
-  }
 
   onSubmit(blogRequest : NgForm){
     console.log(blogRequest)
